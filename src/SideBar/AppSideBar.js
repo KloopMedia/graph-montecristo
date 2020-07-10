@@ -145,11 +145,11 @@ export default function PersistentDrawerLeft(props) {
             <SearchIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Обновить">
+        {/* <Tooltip title="Обновить">
           <IconButton aria-label="reset" onClick={props.handleResetClick}>
             <LoopIcon />
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip title="Очистить">
           <IconButton aria-label="clear" onClick={props.handleClearClick}>
             <ClearIcon />

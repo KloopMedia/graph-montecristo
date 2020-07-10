@@ -140,7 +140,7 @@ class App extends Component {
           searchText={this.state.searchText}
           handleSearchTextChange={this.handleSearchTextChange}
           handleGoClick={this.handleGoClick} 
-          handleResetClick={this.handleResetClick}
+          // handleResetClick={this.handleResetClick}
           handleClearClick={this.handleClearClick}
           nodeCoords={this.state.coords}
           >
