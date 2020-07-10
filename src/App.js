@@ -16,36 +16,41 @@ class App extends Component {
     searchText: "",
     goClick: false,
     clearGraph: false,
-    listOfNodes: [],
+    listOfNodes: null,
     showPagination: false,
     errorMessage: '',
     newCoords: null,
-    coords: {}
+    coords: {},
+    allCoords: null,
+    newLinks: null,
+    links: [],
+    allLinks: null,
   }
 
   componentDidMount() { 
     let urlString =  queryString.parse(window.location.search, {decode: false})
     let query = ''
-    console.log("URL STRING", urlString)
     if (urlString.nodes) {
       query = "MATCH (n) where id(n) in [" + urlString.nodes + "] return n"
-      console.log("NODES", query)
       this.setState({cypherQuery: query})
       this.handleGoClick()
     }
     else if (urlString.url) {
-      console.log("urlString", urlString)
       this.fetchData(urlString)
     }
     else if (urlString.coords) {
-      let dec = decodeURI(urlString.coords);
-      let obj = JSON.parse(dec)
-      console.log(obj)
-      let ids = Object.keys(obj)
+      let decodedCoord = decodeURI(urlString.coords);
+      let coords = JSON.parse(decodedCoord)
+      let ids = Object.keys(coords)
       query = "MATCH (n) where id(n) in [" + ids + "] return n"
-      this.setState({newCoords: obj})
+      this.setState({newCoords: coords})
       this.setState({cypherQuery: query})
       this.handleGoClick()
+    }
+    if (urlString.links && (urlString.nodes || urlString.coords)) {
+      let decodedLinks = decodeURI(urlString.links)
+      let links = JSON.parse(decodedLinks)
+      this.setState({newLinks: links})
     }
   }
 
@@ -60,9 +65,23 @@ class App extends Component {
 
   handlePaginationChange = (event, value) => {
     this.handleClearClick()
-    let nodes = this.state.listOfNodes[value - 1]
-    let query = "MATCH (n) where id(n) in [" + nodes.join() + "] return n"
-    this.setState({cypherQuery: query})
+    let nodes = null
+    let coords = null
+    let links = null
+
+    if (this.state.listOfNodes) {
+      nodes = this.state.listOfNodes[value-1]
+    }
+    else if (this.state.allCoords) {
+      coords = this.state.allCoords[value-1]
+      nodes = Object.keys(coords)
+    }
+    if (this.state.allLinks && (this.state.listOfNodes || this.state.allCoords)) {
+      links = this.state.allLinks[value-1]
+    }
+
+    let query = "MATCH (n) where id(n) in [" + nodes + "] return n"
+    this.setState({cypherQuery: query, newCoords: coords, newLinks: links})
     this.handleGoClick()
   }
 
@@ -74,10 +93,23 @@ class App extends Component {
     })
     .then(response => {
       // handle success
-      console.log(response);
-      let query = "MATCH (n) where id(n) in [" + response.data[0].join() + "] return n"
-      console.log(query)
-      this.setState({listOfNodes: response.data, showPagination: true, cypherQuery: query})
+      let query = 'ERROR'
+      if (response.data.nodes) {
+        let nodes = response.data.nodes
+        query = "MATCH (n) where id(n) in [" + nodes[0] + "] return n"
+        this.setState({listOfNodes: nodes})
+      }
+      else if (response.data.coords) {
+        let coords = response.data.coords
+        let ids = Object.keys(coords[0])
+        query = "MATCH (n) where id(n) in [" + ids + "] return n"
+        this.setState({newCoords: coords[0], allCoords: coords})
+      }
+      if (response.data.links && (response.data.nodes || response.data.coords)) {
+        let links = response.data.links
+        this.setState({newLinks: links[0], allLinks: links})
+      }
+      this.setState({showPagination: true, cypherQuery: query})
       this.handleGoClick()
     })
     .catch(error => {
@@ -114,6 +146,14 @@ class App extends Component {
   }
 
   returnPagination = () => {
+    let count = 0
+    if (this.state.listOfNodes) {
+      count = this.state.listOfNodes.length
+    }
+    else if (this.state.allCoords) {
+      count = this.state.allCoords.length
+    }
+
     return (
       <Grid container justify="center" style={{
         position: 'absolute',
@@ -122,13 +162,17 @@ class App extends Component {
         WebkitTransform: 'translateX(-50%)',
         transform: 'translateX(-50%)'
         }} >
-      <Pagination count={this.state.listOfNodes.length} onChange={this.handlePaginationChange} size="small" showFirstButton showLastButton />
+      <Pagination count={count} onChange={this.handlePaginationChange} size="small" showFirstButton showLastButton />
     </Grid>
     )
   }
 
   returnCoords = (obj) => {
     this.setState({coords: obj})
+  }
+
+  returnLinks = (arr) => {
+    this.setState({links: arr})
   }
   
   render() {
@@ -143,6 +187,7 @@ class App extends Component {
           // handleResetClick={this.handleResetClick}
           handleClearClick={this.handleClearClick}
           nodeCoords={this.state.coords}
+          nodeLinks={this.state.links}
           >
           {this.state.errorMessage &&
             <h3 className="error"> { this.state.errorMessage } </h3> }
@@ -155,6 +200,8 @@ class App extends Component {
             errorMessage={this.handleError}
             returnCoords={this.returnCoords}
             newCoords={this.state.newCoords}
+            returnLinks={this.returnLinks}
+            newLinks={this.state.newLinks}
             />
             {this.state.showPagination? this.returnPagination() : null}
         </AppSideBar>

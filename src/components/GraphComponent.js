@@ -228,6 +228,8 @@ class GraphComponent extends Component{
         cardNodeIds={this.state.cardNodeIds}
         returnCoords={this.props.returnCoords}
         newCoords={this.props.newCoords}
+        returnLinks={this.props.returnLinks}
+        newLinks={this.props.newLinks}
         />
     }
     return(

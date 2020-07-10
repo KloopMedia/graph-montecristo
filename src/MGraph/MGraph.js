@@ -65,7 +65,6 @@ const MGraph = (props) => {
     ////
 
     dispGraph.links = dispGraph.links.map((clearLink) => {
-
       const link = {...clearLink, ...relationshipConfig[clearLink.type].linkConf}
 
       // if PARTICIPATED_IN.properties not empty
@@ -93,7 +92,6 @@ const MGraph = (props) => {
       return link
     })
 
-
     /* DO NOT DELETE
 
     if (Object.keys(link.properties).length !== 0) {
@@ -105,7 +103,6 @@ const MGraph = (props) => {
     console.log('LINK', link)
     return link
   }) */
-
     return dispGraph
   };
 
@@ -162,6 +159,12 @@ const MGraph = (props) => {
 
   useEffect(()=> {
     handlePosChange()
+    if (props.newLinks && !graphRef.current.state.d3Links.length) {
+      graphRef.current.state.d3Links = props.newLinks
+    }
+    let links = graphRef.current.state.d3Links
+    props.returnLinks(links)
+    
   })
 
   const handlePosChange = () => {
@@ -174,7 +177,7 @@ const MGraph = (props) => {
   }
 
   return <Graph
-  ref={graphRef}
+    ref={graphRef}
     config={myConfig}
     id="d3graph" // id is mandatory, if no id is defined rd3g will throw an error
     data={displayGraph(props)}

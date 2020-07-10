@@ -86,8 +86,8 @@ const useStyles = makeStyles((theme) => ({
             </Avatar>
           }
           action={
-            <IconButton aria-label="settings">
-              <MinimizeIcon onClick={() => props.onMinimizeClick(props.node.id)}/>
+            <IconButton aria-label="settings" onClick={() => props.onMinimizeClick(props.node.id)}>
+              <MinimizeIcon />
             </IconButton>
           }
           subheader={<Typography>{subheader}</Typography>} 

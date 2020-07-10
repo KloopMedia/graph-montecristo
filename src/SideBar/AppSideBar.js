@@ -203,6 +203,14 @@ export default function PersistentDrawerLeft(props) {
            multiline
            value={JSON.stringify(props.nodeCoords)}/>
       </List>
+      <List>
+      <TextField
+           id="links"
+           label="Связи"
+           variant="outlined" 
+           multiline
+           value={JSON.stringify(props.nodeLinks)}/>
+      </List>
       </Drawer>
       <main style={{padding: 0, height: '100%'}}
         className={clsx(classes.content, {
