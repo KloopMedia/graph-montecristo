@@ -12,7 +12,7 @@ import { Grid, Typography, Box } from '@material-ui/core';
 
 class GraphComponent extends Component{
 
-  driver = neo4j.driver('bolt://neo4j.kloop.io:7687')
+  driver = neo4j.driver('bolt://23.96.90.167:7687')
 
   state = {
     visibleGraph: Immutable.fromJS({nodes: {}, edges: {}}),
