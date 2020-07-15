@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "9e2dea422c2af2c61352eb28d426ca7e",
+    "revision": "bf5b7376529195beca40de98b76d8f7c",
     "url": "/graph-montecristo/index.html"
   },
   {
-    "revision": "5133d96c339247eee9c8",
+    "revision": "b6a470bc199849e15dca",
     "url": "/graph-montecristo/static/css/main.2ffb024c.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/graph-montecristo/static/js/2.3d35cec6.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "5133d96c339247eee9c8",
-    "url": "/graph-montecristo/static/js/main.13e9a5d8.chunk.js"
+    "revision": "b6a470bc199849e15dca",
+    "url": "/graph-montecristo/static/js/main.2b362ed0.chunk.js"
   },
   {
     "revision": "93ff6f2a5edd2e687731",
